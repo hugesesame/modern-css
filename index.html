@@ -1,0 +1,1595 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern CSS Playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --color-primary:#0066cc;
+  --color-primary-focus:#0071e3;
+  --color-primary-on-dark:#2997ff;
+  --color-canvas:#ffffff;
+  --color-parchment:#f5f5f7;
+  --color-pearl:#fafafc;
+  --color-ink:#1d1d1f;
+  --color-ink-muted-80:#333333;
+  --color-ink-muted-48:#7a7a7a;
+  --color-on-dark:#ffffff;
+  --color-body-muted:#cccccc;
+  --color-hairline:#e0e0e0;
+  --color-divider-soft:rgba(0,0,0,.08);
+  --color-code-bg:#1d1d1f;
+  --color-code-bg-2:#272729;
+  --radius-pill:9999px;
+  --radius-lg:18px;
+  --radius-md:11px;
+  --radius-sm:8px;
+  --space-xs:8px;
+  --space-sm:12px;
+  --space-md:17px;
+  --space-lg:24px;
+  --space-xl:32px;
+  --space-section:80px;
+  --font-display:-apple-system, "SF Pro Display", "Inter", sans-serif;
+  --font-body:-apple-system, "SF Pro Text", "Inter", sans-serif;
+  --font-mono:"SF Mono", "Menlo", "Consolas", monospace;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.47;
+  letter-spacing:-0.374px;
+  color:var(--color-ink);
+  background:var(--color-canvas);
+}
+
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:-0.28px;
+  margin:0 0 var(--space-xs) 0;
+}
+
+p{margin:0 0 var(--space-sm) 0;}
+
+/* ---------- Topbar ---------- */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:52px;
+  padding:0 var(--space-lg);
+  background:rgba(245,245,247,.8);
+  backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--color-hairline);
+}
+.topbar .brand{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:17px;
+  letter-spacing:-0.374px;
+}
+.level-tabs{display:flex;gap:4px;background:var(--color-hairline);padding:4px;border-radius:var(--radius-pill);}
+.level-tab{
+  border:none;
+  background:transparent;
+  padding:7px 18px;
+  font-family:var(--font-body);
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:-0.224px;
+  color:var(--color-ink-muted-80);
+  border-radius:var(--radius-pill);
+  cursor:pointer;
+  transition:transform .15s ease, background .2s ease, color .2s ease;
+}
+.level-tab:active{transform:scale(0.95);}
+.level-tab.active{background:var(--color-canvas);color:var(--color-primary);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+
+/* ---------- Layout ---------- */
+.layout{display:flex;align-items:flex-start;max-width:1280px;margin:0 auto;}
+.sidebar{
+  position:sticky;
+  top:52px;
+  width:240px;
+  flex:none;
+  padding:var(--space-xl) var(--space-lg);
+  max-height:calc(100vh - 52px);
+  overflow-y:auto;
+}
+.sidebar h4{
+  font-size:12px;
+  letter-spacing:-0.12px;
+  color:var(--color-ink-muted-48);
+  text-transform:uppercase;
+  font-weight:600;
+  margin-bottom:var(--space-sm);
+}
+.toc-link{
+  display:block;
+  padding:6px 10px;
+  margin-bottom:2px;
+  font-size:14px;
+  letter-spacing:-0.224px;
+  color:var(--color-ink-muted-80);
+  text-decoration:none;
+  border-radius:var(--radius-sm);
+}
+.toc-link:hover{background:var(--color-parchment);}
+.toc-link.active{background:var(--color-parchment);color:var(--color-primary);font-weight:600;}
+
+main{flex:1;min-width:0;padding:var(--space-xl) var(--space-lg) 120px;}
+
+/* ---------- Hero ---------- */
+.hero{padding:var(--space-section) 0 var(--space-lg);}
+.hero h1{font-size:40px;line-height:1.1;}
+.hero p{font-size:21px;font-weight:400;color:var(--color-ink-muted-80);letter-spacing:0.196px;max-width:640px;}
+
+/* ---------- Feature cards ---------- */
+.feature{
+  padding:var(--space-xl) 0;
+  border-top:1px solid var(--color-hairline);
+  scroll-margin-top:70px;
+}
+.feature:first-of-type{border-top:none;}
+.feature-tag{
+  display:inline-block;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:-0.12px;
+  color:var(--color-primary);
+  background:rgba(0,102,204,.08);
+  padding:4px 10px;
+  border-radius:var(--radius-pill);
+  margin-bottom:var(--space-xs);
+}
+.feature h3{font-size:24px;}
+.feature-desc{color:var(--color-ink-muted-80);max-width:680px;}
+
+.demo-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:var(--space-lg);
+  margin-top:var(--space-lg);
+}
+@media (max-width:900px){.demo-grid{grid-template-columns:1fr;}}
+
+.demo-stage{
+  background:var(--color-parchment);
+  border:1px solid var(--color-hairline);
+  border-radius:var(--radius-lg);
+  padding:var(--space-lg);
+  display:flex;
+  flex-direction:column;
+  gap:var(--space-md);
+}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+
+.btn{
+  border:none;
+  cursor:pointer;
+  font-family:var(--font-body);
+  transition:transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn:active{transform:scale(0.95);}
+.btn-pill{
+  background:var(--color-primary);
+  color:#fff;
+  font-size:14px;
+  font-weight:600;
+  padding:8px 16px;
+  border-radius:var(--radius-pill);
+}
+.btn-pill.ghost{
+  background:transparent;
+  color:var(--color-primary);
+  border:1px solid var(--color-primary);
+}
+.btn-pill.selected{background:var(--color-primary-focus);}
+.btn-utility{
+  background:var(--color-ink);
+  color:#fff;
+  font-size:13px;
+  font-weight:400;
+  padding:7px 13px;
+  border-radius:var(--radius-sm);
+}
+.btn-utility.selected{background:var(--color-primary);}
+
+input[type="range"]{width:100%;accent-color:var(--color-primary);}
+.slider-row{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--color-ink-muted-80);}
+.slider-row output{font-family:var(--font-mono);font-size:13px;color:var(--color-ink);min-width:56px;text-align:right;}
+
+.switch{
+  position:relative;
+  width:46px;
+  height:26px;
+  flex:none;
+}
+.switch input{opacity:0;width:0;height:0;}
+.switch .track{
+  position:absolute;inset:0;
+  background:var(--color-hairline);
+  border-radius:var(--radius-pill);
+  transition:background .2s ease;
+  cursor:pointer;
+}
+.switch .thumb{
+  position:absolute;
+  top:3px;left:3px;
+  width:20px;height:20px;
+  background:#fff;
+  border-radius:50%;
+  box-shadow:0 1px 3px rgba(0,0,0,.3);
+  transition:transform .2s ease;
+  pointer-events:none;
+}
+.switch input:checked + .track{background:var(--color-primary);}
+.switch input:checked + .track .thumb{transform:translateX(20px);}
+
+.demo-box{
+  min-height:140px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--color-canvas);
+  border-radius:var(--radius-md);
+  border:1px solid var(--color-hairline);
+  position:relative;
+  overflow:hidden;
+  flex:1;
+}
+
+/* code panel */
+.code-panel{
+  background:var(--color-code-bg);
+  color:#f2f2f2;
+  border-radius:var(--radius-lg);
+  padding:var(--space-lg);
+  font-family:var(--font-mono);
+  font-size:13px;
+  line-height:1.7;
+  overflow-x:auto;
+  margin:0;
+}
+.code-panel .kw{color:#2997ff;}
+.code-panel .prop{color:#a6e3a1;}
+.code-panel .hl{color:#ffd479;font-weight:600;}
+.code-panel .cm{color:#7a7a7a;}
+
+/* ---------- Super-beginner demos ---------- */
+.method-demo-text{font-size:17px;font-weight:600;margin:0;transition:color .2s ease;}
+
+.sel-demo-p{margin:0;padding:8px 10px;border-radius:var(--radius-sm);font-size:15px;background:#fff;border:1px solid var(--color-hairline);transition:color .2s ease, border-color .2s ease;}
+.sel-demo-p.match{color:var(--color-primary);border-color:var(--color-primary);}
+
+.bm-margin{background:rgba(246,145,66,.28);border-radius:var(--radius-sm);transition:padding .15s ease;}
+.bm-border{border-style:solid;border-color:var(--color-ink);border-radius:var(--radius-sm);transition:border-width .1s ease;}
+.bm-padding{background:rgba(52,168,83,.25);transition:padding .15s ease;}
+.bm-content{background:var(--color-primary);color:#fff;font-size:12px;font-weight:600;padding:14px;border-radius:4px;text-align:center;}
+.bm-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--color-ink-muted-80);}
+.bm-legend span{display:inline-flex;align-items:center;gap:5px;}
+.bm-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+.color-swatch{width:100%;height:100px;border-radius:var(--radius-md);}
+
+.display-chip{
+  background:var(--color-primary);
+  color:#fff;
+  font-size:13px;
+  font-weight:600;
+  padding:8px;
+  border-radius:var(--radius-sm);
+  margin:2px 4px 2px 0;
+  vertical-align:top;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+
+/* ---------- Demo-specific ---------- */
+.flex-row{display:flex;width:100%;height:100px;gap:8px;padding:8px;}
+.flex-row.jc-flex-start{justify-content:flex-start;}
+.flex-row.jc-center{justify-content:center;}
+.flex-row.jc-space-between{justify-content:space-between;}
+.flex-row.ai-flex-start{align-items:flex-start;}
+.flex-row.ai-center{align-items:center;}
+.flex-row.ai-flex-end{align-items:flex-end;}
+.flex-chip{
+  width:44px;height:44px;
+  background:var(--color-primary);
+  border-radius:var(--radius-sm);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:600;
+  flex:none;
+}
+
+.grid-demo{display:grid;width:100%;gap:8px;padding:8px;}
+.grid-demo .cell{background:var(--color-primary);border-radius:var(--radius-sm);height:44px;}
+
+.theme-card{
+  width:100%;
+  padding:var(--space-lg);
+  border-radius:var(--radius-lg);
+  border:3px solid var(--accent, var(--color-primary));
+  background:var(--color-canvas);
+  text-align:center;
+}
+.theme-card button{
+  margin-top:8px;
+  background:var(--accent, var(--color-primary));
+  color:#fff;
+  border:none;padding:8px 18px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;
+}
+
+.clamp-box{
+  background:var(--color-primary);
+  color:#fff;
+  border-radius:var(--radius-md);
+  font-size:13px;
+  font-weight:600;
+  transition:padding .1s ease, width .2s ease;
+}
+
+.transition-chip{
+  width:120px;height:60px;
+  background:var(--color-ink);
+  color:#fff;
+  border-radius:var(--radius-md);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  transition:background .3s ease, transform .3s ease, border-radius .3s ease;
+}
+.transition-chip:hover{background:var(--color-primary);transform:scale(1.08);border-radius:var(--radius-pill);}
+
+.is-demo-card h5{margin:0 0 4px;font-size:15px;}
+.is-demo-card{padding:12px;border:2px solid var(--color-hairline);border-radius:var(--radius-sm);background:#fff;margin-bottom:8px;width:100%;transition:border-color .2s ease, background .2s ease;}
+.is-demo-card.match{border-color:var(--color-primary);background:rgba(0,102,204,.06);}
+.is-demo-card.match h5{color:var(--color-primary);}
+
+.container-wrapper{
+  container-type:inline-size;
+  container-name:demo;
+  border:2px dashed var(--color-hairline);
+  border-radius:var(--radius-md);
+  margin:0 auto;
+  transition:width .3s ease;
+  padding:12px;
+  background:#fff;
+}
+.cq-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+@container demo (min-width: 480px){
+  .cq-grid{grid-template-columns:1fr 1fr;}
+}
+@container demo (min-width: 700px){
+  .cq-grid{grid-template-columns:1fr 1fr 1fr;}
+}
+.cq-card{background:var(--color-parchment);border-radius:var(--radius-sm);padding:10px;font-size:12px;text-align:center;}
+
+.has-card{
+  border:2px solid var(--color-hairline);
+  border-radius:var(--radius-md);
+  padding:12px;
+  width:100%;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:border-color .2s ease, background .2s ease;
+}
+.has-card:has(input:checked){border-color:var(--color-primary);background:rgba(0,102,204,.06);}
+
+.mix-swatch{width:100%;height:100px;border-radius:var(--radius-md);transition:background .1s ease;}
+
+.float-stage{position:relative;height:180px;width:100%;background:#fff;border-radius:var(--radius-md);overflow:hidden;}
+.float-card{
+  position:absolute;
+  top:16px;left:16px;
+  width:100px;height:64px;
+  background:var(--color-primary);
+  color:#fff;
+  border-radius:var(--radius-md);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.float-card.moved{transform:translate(140px, 80px);}
+
+.ratio-box{background:var(--color-primary);border-radius:var(--radius-md);width:60%;}
+
+.scroll-box{height:150px;overflow-y:scroll;border:1px solid var(--color-hairline);border-radius:var(--radius-md);background:#fff;padding:12px;}
+.scroll-box .filler{height:400px;}
+.scroll-anim-target{
+  position:sticky;
+  top:12px;
+  width:60px;height:60px;
+  background:var(--color-primary);
+  border-radius:var(--radius-md);
+  animation:scrollGrow linear both;
+  animation-duration:1ms;
+  animation-timeline:scroll(nearest);
+}
+@keyframes scrollGrow{from{transform:scale(.4);opacity:.3;}to{transform:scale(1);opacity:1;}}
+
+.vt-box{padding:20px;border-radius:var(--radius-md);background:#fff;width:100%;text-align:center;font-weight:600;}
+
+@layer base, override;
+@layer base{.layer-demo{background:var(--color-ink-muted-48);}}
+@layer override{.layer-demo.on{background:var(--color-primary);}}
+.layer-demo{width:100%;height:70px;border-radius:var(--radius-md);transition:background .2s ease;}
+
+.subgrid-outer{display:grid;grid-template-columns:max-content 1fr;row-gap:8px;column-gap:12px;width:100%;}
+.subgrid-row{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:12px;}
+.subgrid-row.no-subgrid{grid-template-columns:max-content 1fr;}
+.subgrid-label{background:var(--color-parchment);border:1px solid var(--color-hairline);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;font-weight:600;white-space:nowrap;}
+.subgrid-value{background:#fff;border:1px solid var(--color-hairline);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;}
+
+.anchor-btn{position:relative;}
+@property --tip-x{syntax:'<length>';inherits:false;initial-value:0px;}
+.tooltip{
+  position:absolute;
+  top:-42px;left:50%;
+  transform:translateX(-50%);
+  background:var(--color-ink);
+  color:#fff;
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:var(--radius-sm);
+  opacity:0;
+  transition:opacity .2s ease;
+  pointer-events:none;
+}
+.tooltip.show{opacity:1;}
+
+@property --angle{syntax:'<angle>';inherits:false;initial-value:0deg;}
+.property-box{
+  width:100%;height:100px;
+  border-radius:var(--radius-md);
+  background:conic-gradient(from var(--angle), var(--color-primary), #fff, var(--color-primary));
+  transition:--angle .1s linear;
+}
+
+/* ---------- Footer ---------- */
+footer{
+  background:var(--color-parchment);
+  color:var(--color-ink-muted-80);
+  padding:64px var(--space-lg);
+  font-size:14px;
+  text-align:center;
+}
+
+@media (max-width:900px){
+  .sidebar{display:none;}
+}
+
+@media (max-width:480px){
+  html{overflow-x:hidden;}
+  .topbar{padding:0 var(--space-sm);}
+  .brand{font-size:14px;}
+  .level-tabs{gap:2px;padding:3px;}
+  .level-tab{padding:6px 10px;font-size:12px;}
+  .hero{padding:var(--space-xl) 0 var(--space-sm);}
+  .hero h1{font-size:28px;}
+  .hero p{font-size:16px;}
+  main{padding:var(--space-lg) var(--space-sm) 80px;}
+  .demo-stage, .code-panel{padding:var(--space-sm);}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">Modern CSS Playground</div>
+  <div class="level-tabs" role="tablist">
+    <button class="level-tab active" data-level="super-beginner">超入門</button>
+    <button class="level-tab" data-level="beginner">初級</button>
+    <button class="level-tab" data-level="intermediate">中級</button>
+    <button class="level-tab" data-level="advanced">上級</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h4>目次</h4>
+    <nav id="toc"></nav>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <h1 id="hero-title">初級</h1>
+      <p id="hero-desc">レイアウトの基礎から、最近よく使われるCSSの実用機能まで、動かしながら学びます。</p>
+    </section>
+
+    <!-- ===================== SUPER BEGINNER ===================== -->
+    <div class="level-section" data-level="super-beginner">
+
+      <section class="feature" id="html-css-relation">
+        <span class="feature-tag">超入門</span>
+        <h3>HTMLとCSSの関係</h3>
+        <p class="feature-desc">CSSの書き方には3種類あります。切り替えて、どこにCSSを書いているか見比べてみましょう。同じ見た目でも、書き方によって管理のしやすさが変わります。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility method-btn selected" data-method="inline">インライン</button>
+              <button class="btn btn-utility method-btn" data-method="style-tag">&lt;style&gt;タグ</button>
+              <button class="btn btn-utility method-btn" data-method="external">外部ファイル</button>
+            </div>
+            <div class="demo-box">
+              <p class="method-demo-text" id="methodDemoText">この文字に色が付いています</p>
+            </div>
+          </div>
+          <pre class="code-panel"><code id="methodCode">&lt;p style="color: #0066cc;"&gt;
+  この文字に色が付いています
+&lt;/p&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="selector-basics">
+        <span class="feature-tag">超入門</span>
+        <h3>セレクタの基本</h3>
+        <p class="feature-desc">CSSは「どの要素に」スタイルを当てるかをセレクタで指定します。要素セレクタ・クラスセレクタ・IDセレクタで、当たる範囲がどう変わるか確認します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility sel-btn selected" data-sel="p">要素セレクタ (p)</button>
+              <button class="btn btn-utility sel-btn" data-sel="class">クラスセレクタ (.note)</button>
+              <button class="btn btn-utility sel-btn" data-sel="id">IDセレクタ (#special)</button>
+            </div>
+            <div class="demo-box" style="flex-direction:column;align-items:stretch;gap:6px;">
+              <p class="sel-demo-p" id="selP1">ふつうの p 要素です</p>
+              <p class="sel-demo-p note" id="selP2">class="note" が付いた p です</p>
+              <p class="sel-demo-p" id="selP3" style="" data-isid="true">id="special" が付いた p です</p>
+            </div>
+          </div>
+          <pre class="code-panel"><code id="selCode">p {
+  color: #0066cc;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="box-model">
+        <span class="feature-tag">超入門</span>
+        <h3>ボックスモデル</h3>
+        <p class="feature-desc">すべてのHTML要素は、content・padding・border・marginの4層でできています。marginは本来「何も描画されない透明な余白」なので、ブラウザの開発者ツールと同じように色を付けて可視化しています。スライダーで各層の太さを変えて、重なり方を確認します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="slider-row">
+              <span>padding</span>
+              <input type="range" id="bmPadding" min="0" max="40" value="16">
+              <output id="bmPaddingOut">16px</output>
+            </div>
+            <div class="slider-row">
+              <span>border</span>
+              <input type="range" id="bmBorder" min="0" max="16" value="4">
+              <output id="bmBorderOut">4px</output>
+            </div>
+            <div class="slider-row">
+              <span>margin</span>
+              <input type="range" id="bmMargin" min="0" max="60" value="20">
+              <output id="bmMarginOut">20px</output>
+            </div>
+            <div class="bm-legend">
+              <span><i style="background:rgba(246,145,66,.6);"></i>margin</span>
+              <span><i style="background:var(--color-ink);"></i>border</span>
+              <span><i style="background:rgba(52,168,83,.6);"></i>padding</span>
+              <span><i style="background:var(--color-primary);"></i>content</span>
+            </div>
+            <div class="demo-box" style="min-height:260px;overflow:visible;">
+              <div class="bm-margin" id="bmMarginBox" style="padding:20px;">
+                <div class="bm-border" id="bmBorderBox" style="border-width:4px;">
+                  <div class="bm-padding" id="bmPaddingBox" style="padding:16px;">
+                    <div class="bm-content">content</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.box {
+  margin: <span class="hl" id="bmMarginCode">12px</span>;
+  border: <span class="hl" id="bmBorderCode">4px</span> solid #1d1d1f;
+  padding: <span class="hl" id="bmPaddingCode">16px</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="color-values">
+        <span class="feature-tag">超入門</span>
+        <h3>色の指定方法</h3>
+        <p class="feature-desc">CSSで色を指定する方法は複数あります。書き方は違っても、同じ色を表現できます。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility color-btn selected" data-color-code="tomato">キーワード</button>
+              <button class="btn btn-utility color-btn" data-color-code="#ff6347">HEX</button>
+              <button class="btn btn-utility color-btn" data-color-code="rgb(255, 99, 71)">RGB</button>
+            </div>
+            <div class="demo-box">
+              <div class="color-swatch" id="colorSwatch" style="background:tomato;"></div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.box {
+  background: <span class="hl" id="colorCode">tomato</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="font-basics">
+        <span class="feature-tag">超入門</span>
+        <h3>フォントとテキストの基本</h3>
+        <p class="feature-desc">文字の大きさ・太さ・揃え位置は、それぞれ独立したプロパティで指定します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="slider-row">
+              <span>文字サイズ</span>
+              <input type="range" id="fontSizeSlider" min="12" max="40" value="17">
+              <output id="fontSizeOut">17px</output>
+            </div>
+            <div class="controls">
+              <button class="btn btn-utility fw-btn" data-fw="400">400（標準）</button>
+              <button class="btn btn-utility fw-btn selected" data-fw="600">600（太字）</button>
+            </div>
+            <div class="controls">
+              <button class="btn btn-utility ta-btn selected" data-ta="left">left</button>
+              <button class="btn btn-utility ta-btn" data-ta="center">center</button>
+              <button class="btn btn-utility ta-btn" data-ta="right">right</button>
+            </div>
+            <div class="demo-box">
+              <p id="fontDemoText" style="font-size:17px;font-weight:600;text-align:left;width:100%;margin:0;">Modern CSS</p>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.text {
+  font-size: <span class="hl" id="fontSizeCode">17px</span>;
+  font-weight: <span class="hl" id="fontWeightCode">600</span>;
+  text-align: <span class="hl" id="textAlignCode">left</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="display-basics">
+        <span class="feature-tag">超入門</span>
+        <h3>display の基本</h3>
+        <p class="feature-desc">block・inline・inline-block で、要素の並び方と幅・高さの指定できる範囲が変わります。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility display-btn" data-display="block">block</button>
+              <button class="btn btn-utility display-btn" data-display="inline">inline</button>
+              <button class="btn btn-utility display-btn selected" data-display="inline-block">inline-block</button>
+            </div>
+            <div class="demo-box" style="display:block;text-align:left;">
+              <div class="display-chip" id="dChip1" style="display:inline-block;width:180px;height:56px;">Chip 1</div>
+              <div class="display-chip" id="dChip2" style="display:inline-block;width:180px;height:56px;">Chip 2</div>
+              <div class="display-chip" id="dChip3" style="display:inline-block;width:180px;height:56px;">Chip 3</div>
+            </div>
+            <p style="margin:0;font-size:13px;color:var(--color-ink-muted-80);">Chip 1 の実際の描画幅: <span id="dChipMeasured" style="font-family:var(--font-mono);color:var(--color-ink);"></span></p>
+          </div>
+          <pre class="code-panel"><code>.chip {
+  display: <span class="hl" id="displayCode">inline-block</span>;
+  width: <span class="hl" id="displayWidthCode">180px</span>; /* 指定サイズ */
+  height: 56px;
+}
+/* inline のときは width/height が無視される */</code></pre>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===================== BEGINNER ===================== -->
+    <div class="level-section" data-level="beginner" style="display:none;">
+
+      <section class="feature" id="flexbox-basics">
+        <span class="feature-tag">初級</span>
+        <h3>Flexbox基礎</h3>
+        <p class="feature-desc">justify-content と align-items を切り替えて、要素の並び方を確認します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility jc-btn selected" data-jc="flex-start">flex-start</button>
+              <button class="btn btn-utility jc-btn" data-jc="center">center</button>
+              <button class="btn btn-utility jc-btn" data-jc="space-between">space-between</button>
+            </div>
+            <div class="controls">
+              <button class="btn btn-utility ai-btn selected" data-ai="flex-start">flex-start</button>
+              <button class="btn btn-utility ai-btn" data-ai="center">center</button>
+              <button class="btn btn-utility ai-btn" data-ai="flex-end">flex-end</button>
+            </div>
+            <div class="demo-box">
+              <div class="flex-row jc-flex-start ai-flex-start" id="flexRow">
+                <div class="flex-chip">1</div>
+                <div class="flex-chip">2</div>
+                <div class="flex-chip">3</div>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code id="flexCode">.row {
+  display: flex;
+  justify-content: <span class="hl" id="flexJcVal">flex-start</span>;
+  align-items: <span class="hl" id="flexAiVal">flex-start</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="grid-basics">
+        <span class="feature-tag">初級</span>
+        <h3>Grid基礎</h3>
+        <p class="feature-desc">列数のスライダーを動かして grid-template-columns を確認します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="slider-row">
+              <span>列数</span>
+              <input type="range" id="gridSlider" min="1" max="6" value="3">
+              <output id="gridSliderOut">3</output>
+            </div>
+            <div class="demo-box">
+              <div class="grid-demo" id="gridDemo" style="grid-template-columns:repeat(3,1fr);">
+                <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.grid {
+  display: grid;
+  grid-template-columns: <span class="hl" id="gridCode">repeat(3, 1fr)</span>;
+  gap: 8px;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="css-variables">
+        <span class="feature-tag">初級</span>
+        <h3>CSS変数（カスタムプロパティ）</h3>
+        <p class="feature-desc">1つの変数を書き換えるだけで、複数のプロパティに反映されます。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-pill theme-btn selected" data-color="#0066cc" style="background:#0066cc;">Blue</button>
+              <button class="btn btn-pill theme-btn" data-color="#12805c" style="background:#12805c;">Green</button>
+              <button class="btn btn-pill theme-btn" data-color="#7b3fe4" style="background:#7b3fe4;">Purple</button>
+            </div>
+            <div class="demo-box">
+              <div class="theme-card" id="themeCard" style="--accent:#0066cc;">
+                <p style="margin:0;">テーマカラーが変数で管理されています</p>
+                <button>Buy</button>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>:root {
+  --accent: <span class="hl" id="varCode">#0066cc</span>;
+}
+.card { border-color: var(--accent); }
+.card button { background: var(--accent); }</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="fluid-padding">
+        <span class="feature-tag">初級</span>
+        <h3>clamp() によるフルードスペーシング</h3>
+        <p class="feature-desc">画面幅を疑似的に変えて、clamp() が padding をどう計算するか確認します（実際のビューポート幅ではなく、スライダーで幅をシミュレートしています）。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="slider-row">
+              <span>疑似ビューポート幅</span>
+              <input type="range" id="clampSlider" min="320" max="1400" value="700">
+              <output id="clampSliderOut">700px</output>
+            </div>
+            <div class="demo-box">
+              <div class="clamp-box" id="clampBox">この箱の padding</div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.box {
+  padding: clamp(1rem, 5vw, 4rem);
+  /* 疑似幅 700px のとき: <span class="hl" id="clampCode">計算中...</span> */
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="transition-basics">
+        <span class="feature-tag">初級</span>
+        <h3>transition の基本</h3>
+        <p class="feature-desc">マウスを乗せると、色・角丸・拡大がなめらかに変化します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="demo-box">
+              <div class="transition-chip">Hover me</div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.chip {
+  background: #1d1d1f;
+  transition: background .3s ease,
+              transform .3s ease,
+              border-radius .3s ease;
+}
+.chip:hover {
+  background: <span class="hl">#0066cc</span>;
+  transform: <span class="hl">scale(1.08)</span>;
+  border-radius: <span class="hl">9999px</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="is-where">
+        <span class="feature-tag">初級</span>
+        <h3>:is() / :where() セレクタ</h3>
+        <p class="feature-desc">複数のセレクタをまとめて指定できます。切り替えて、どのカードが一致するか確認します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility" id="isBtn">:is(.a, .b) を適用</button>
+              <button class="btn btn-utility ghost selected" id="isOffBtn">解除</button>
+            </div>
+            <div class="demo-box" style="flex-direction:column;align-items:stretch;">
+              <div class="is-demo-card a"><h5>.a</h5><p style="margin:0;font-size:13px;">対象</p></div>
+              <div class="is-demo-card c"><h5>.c</h5><p style="margin:0;font-size:13px;">対象外</p></div>
+              <div class="is-demo-card b"><h5>.b</h5><p style="margin:0;font-size:13px;">対象</p></div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>:is(.a, .b) h5 {
+  color: <span class="hl">#0066cc</span>;
+}
+/* .c には適用されない */</code></pre>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===================== INTERMEDIATE ===================== -->
+    <div class="level-section" data-level="intermediate" style="display:none;">
+
+      <section class="feature" id="container-queries">
+        <span class="feature-tag">中級</span>
+        <h3>コンテナクエリ（Container Queries）</h3>
+        <p class="feature-desc">ボタンでコンテナの幅を変えると、その幅を基準にカードの列数が応答的に変わります。実際のビューポート幅とは無関係に、コンテナ自身の幅で判定されるのがポイントです。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility" data-w="300">📱 スマホ</button>
+              <button class="btn btn-utility" data-w="520">💻 タブレット</button>
+              <button class="btn btn-utility selected" data-w="760">🖥️ PC</button>
+            </div>
+            <div class="demo-box">
+              <div class="container-wrapper" id="cqWrapper" style="width:760px;max-width:100%;">
+                <div class="cq-grid">
+                  <div class="cq-card">Card A</div>
+                  <div class="cq-card">Card B</div>
+                  <div class="cq-card">Card C</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.wrapper { container-type: inline-size; }
+
+@container (min-width: 480px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+@container (min-width: 700px) {
+  .grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+/* 現在のコンテナ幅: <span class="hl" id="cqCode">760px</span> */</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="has-selector">
+        <span class="feature-tag">中級</span>
+        <h3>:has() セレクタ</h3>
+        <p class="feature-desc">チェックボックスの状態に応じて、親要素のスタイルが変わります。JSを使わず、CSSだけで「子の状態を見て親を変える」ことができます。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="demo-box">
+              <label class="has-card">
+                <input type="checkbox" id="hasCheckbox">
+                <span>このチェックボックスをON にすると枠線が変わります</span>
+              </label>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.card:has(input:checked) {
+  border-color: <span class="hl">#0066cc</span>;
+  background: <span class="hl">rgba(0,102,204,.06)</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="nesting">
+        <span class="feature-tag">中級</span>
+        <h3>ネストCSS（Nesting）</h3>
+        <p class="feature-desc">従来はプリプロセッサ（Sass等）が必要だったネスト構文が、標準CSSで書けます。見た目は同じでも、書き方の違いを比較します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility selected" data-nest="on">ネストあり</button>
+              <button class="btn btn-utility" data-nest="off">ネストなし</button>
+            </div>
+            <div class="demo-box">
+              <div class="theme-card" style="--accent:#0066cc;">
+                <p style="margin:0;">結果は同じ見た目です</p>
+                <button>Buy</button>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code id="nestCode">.card {
+  border: 3px solid #0066cc;
+  & button {
+    background: #0066cc;
+  }
+  &:hover {
+    border-color: #0071e3;
+  }
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="color-mix">
+        <span class="feature-tag">中級</span>
+        <h3>color-mix()</h3>
+        <p class="feature-desc">2色を任意の割合でCSS上で直接混ぜられます。プリプロセッサなしで動的な配色調整が可能です。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="slider-row">
+              <span>混合率</span>
+              <input type="range" id="mixSlider" min="0" max="100" value="50">
+              <output id="mixSliderOut">50%</output>
+            </div>
+            <div class="demo-box">
+              <div class="mix-swatch" id="mixSwatch"></div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.swatch {
+  background: color-mix(in srgb, #0066cc <span class="hl" id="mixCode">50%</span>, #ffffff);
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="keyframes-move">
+        <span class="feature-tag">中級</span>
+        <h3>keyframes / transform アニメーション</h3>
+        <p class="feature-desc">スイッチをONにすると、フローティングカードが transform でスムーズに移動します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <label class="switch">
+                <input type="checkbox" id="floatSwitch">
+                <span class="track"><span class="thumb"></span></span>
+              </label>
+              <span style="font-size:14px;color:var(--color-ink-muted-80);">カードを移動</span>
+            </div>
+            <div class="demo-box">
+              <div class="float-stage">
+                <div class="float-card" id="floatCard">Card</div>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.card {
+  position: absolute;
+  transition: transform .5s cubic-bezier(.2,.8,.2,1);
+  transform: <span class="hl" id="floatCode">translate(0, 0)</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="aspect-ratio">
+        <span class="feature-tag">中級</span>
+        <h3>aspect-ratio</h3>
+        <p class="feature-desc">高さを個別に計算しなくても、縦横比を指定するだけでボックスの形が決まります。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility ratio-btn selected" data-ratio="1/1">1:1</button>
+              <button class="btn btn-utility ratio-btn" data-ratio="4/3">4:3</button>
+              <button class="btn btn-utility ratio-btn" data-ratio="16/9">16:9</button>
+              <button class="btn btn-utility ratio-btn" data-ratio="21/9">21:9</button>
+            </div>
+            <div class="demo-box">
+              <div class="ratio-box" id="ratioBox" style="aspect-ratio:1/1;"></div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.box {
+  aspect-ratio: <span class="hl" id="ratioCode">1/1</span>;
+  width: 60%;
+}</code></pre>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===================== ADVANCED ===================== -->
+    <div class="level-section" data-level="advanced" style="display:none;">
+
+      <section class="feature" id="scroll-driven">
+        <span class="feature-tag">上級</span>
+        <h3>スクロール駆動アニメーション</h3>
+        <p class="feature-desc">スクロール量そのものをアニメーションのタイムラインとして使います。下の枠内を実際にスクロールしてください。対応ブラウザ（Chrome等）でのみ動作します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="demo-box" style="align-items:stretch;flex-direction:column;gap:8px;">
+              <p style="margin:0;font-size:13px;color:var(--color-ink-muted-80);">↓ この枠内をスクロール ↓</p>
+              <div class="scroll-box">
+                <div class="scroll-anim-target"></div>
+                <div class="filler"></div>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.target {
+  position: <span class="hl">sticky</span>; /* 拡大中も画面内に留める */
+  top: 12px;
+  animation: grow linear both;
+  animation-timeline: scroll(nearest);
+}
+@keyframes grow {
+  from { transform: scale(.4); opacity: .3; }
+  to   { transform: scale(1);  opacity: 1;  }
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="view-transitions">
+        <span class="feature-tag">上級</span>
+        <h3>View Transitions API</h3>
+        <p class="feature-desc">ボタンを押すとDOMの更新をブラウザが自動でクロスフェードします。対応ブラウザ（Chrome等）でのみ動作します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-pill" id="vtBtn">切り替える</button>
+            </div>
+            <div class="demo-box">
+              <div class="vt-box" id="vtBox">状態 A</div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>function update() {
+  if (!document.startViewTransition) {
+    render();
+    return;
+  }
+  document.startViewTransition(() => render());
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="cascade-layers">
+        <span class="feature-tag">上級</span>
+        <h3>@layer（カスケードレイヤー）</h3>
+        <p class="feature-desc">詳細度が同じでも、レイヤーの宣言順で勝敗が決まります。後ろのレイヤーが優先されます。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility" id="layerToggle">override レイヤーを有効化</button>
+            </div>
+            <div class="demo-box">
+              <div class="layer-demo" id="layerDemo"></div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>@layer base, override;
+
+@layer base {
+  .box { background: #7a7a7a; }
+}
+@layer override {
+  .box.on { background: <span class="hl">#0066cc</span>; }
+}
+/* override 有効: <span class="hl" id="layerCode">false</span> */</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="subgrid">
+        <span class="feature-tag">上級</span>
+        <h3>Subgrid</h3>
+        <p class="feature-desc">行ごとに独立したグリッドだと、ラベルの列幅が行ごとにバラバラになり列が揃いません。subgridは親グリッドの列トラックをそのまま引き継ぐので、行をまたいで列がぴったり揃います。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="controls">
+              <button class="btn btn-utility selected" data-subgrid="on">subgrid あり</button>
+              <button class="btn btn-utility" data-subgrid="off">subgrid なし</button>
+            </div>
+            <div class="demo-box">
+              <div class="subgrid-outer" id="subgridOuter">
+                <div class="subgrid-row">
+                  <div class="subgrid-label">名前</div>
+                  <div class="subgrid-value">Claude</div>
+                </div>
+                <div class="subgrid-row">
+                  <div class="subgrid-label">誕生日</div>
+                  <div class="subgrid-value">2023</div>
+                </div>
+                <div class="subgrid-row">
+                  <div class="subgrid-label">得意なこと（自己紹介文）</div>
+                  <div class="subgrid-value">CSS</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.outer {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+}
+.row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: <span class="hl" id="subgridCode">subgrid</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="anchor-positioning">
+        <span class="feature-tag">上級</span>
+        <h3>CSS Anchor Positioning</h3>
+        <p class="feature-desc">JSで座標計算せずに、ある要素を別要素にアンカーして配置できます。対応ブラウザ（Chrome等）でのみ動作します。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="demo-box" style="position:relative;">
+              <button class="btn btn-pill anchor-btn" id="anchorBtn">ホバーしてください
+                <span class="tooltip" id="anchorTooltip">アンカー先の要素です</span>
+              </button>
+            </div>
+          </div>
+          <pre class="code-panel"><code>.btn { anchor-name: --my-anchor; }
+
+.tooltip {
+  position: absolute;
+  position-anchor: --my-anchor;
+  bottom: anchor(top);
+  left: anchor(center);
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="feature" id="at-property">
+        <span class="feature-tag">上級</span>
+        <h3>@property</h3>
+        <p class="feature-desc">カスタムプロパティに型（angle）を与えることで、グラデーションの回転角をなめらかにアニメーションできます。</p>
+        <div class="demo-grid">
+          <div class="demo-stage">
+            <div class="slider-row">
+              <span>角度</span>
+              <input type="range" id="angleSlider" min="0" max="360" value="0">
+              <output id="angleSliderOut">0deg</output>
+            </div>
+            <div class="demo-box">
+              <div class="property-box" id="propertyBox" style="--angle:0deg;"></div>
+            </div>
+          </div>
+          <pre class="code-panel"><code>@property --angle {
+  syntax: '&lt;angle&gt;';
+  inherits: false;
+  initial-value: 0deg;
+}
+.box {
+  background: conic-gradient(from var(--angle), #0066cc, #fff, #0066cc);
+  --angle: <span class="hl" id="angleCode">0deg</span>;
+}</code></pre>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+</div>
+
+<footer>Modern CSS Playground — CSS学習用のインタラクティブサンプル集</footer>
+
+<script>
+const LEVEL_LABELS = {
+  "super-beginner": { title: "超入門", desc: "HTMLとCSSを初めて触る方向け。書き方の基本と、色・文字・箱の考え方から始めます。" },
+  beginner: { title: "初級", desc: "レイアウトの基礎から、最近よく使われるCSSの実用機能まで、動かしながら学びます。" },
+  intermediate: { title: "中級", desc: "実務でよく使う、少し発展的なCSS機能を扱います。" },
+  advanced: { title: "上級", desc: "最新のCSS仕様。対応ブラウザが限られる機能も含みます。" }
+};
+
+const FEATURES = {
+  "super-beginner": [
+    ["html-css-relation", "HTMLとCSSの関係"],
+    ["selector-basics", "セレクタの基本"],
+    ["box-model", "ボックスモデル"],
+    ["color-values", "色の指定方法"],
+    ["font-basics", "フォントとテキスト"],
+    ["display-basics", "display の基本"]
+  ],
+  beginner: [
+    ["flexbox-basics", "Flexbox基礎"],
+    ["grid-basics", "Grid基礎"],
+    ["css-variables", "CSS変数"],
+    ["fluid-padding", "clamp() フルードスペーシング"],
+    ["transition-basics", "transition の基本"],
+    ["is-where", ":is() / :where()"]
+  ],
+  intermediate: [
+    ["container-queries", "コンテナクエリ"],
+    ["has-selector", ":has() セレクタ"],
+    ["nesting", "ネストCSS"],
+    ["color-mix", "color-mix()"],
+    ["keyframes-move", "keyframes / transform"],
+    ["aspect-ratio", "aspect-ratio"]
+  ],
+  advanced: [
+    ["scroll-driven", "スクロール駆動アニメーション"],
+    ["view-transitions", "View Transitions API"],
+    ["cascade-layers", "@layer"],
+    ["subgrid", "Subgrid"],
+    ["anchor-positioning", "Anchor Positioning"],
+    ["at-property", "@property"]
+  ]
+};
+
+function renderToc(level) {
+  const toc = document.getElementById("toc");
+  toc.innerHTML = "";
+  FEATURES[level].forEach(([id, label]) => {
+    const a = document.createElement("a");
+    a.href = "#" + id;
+    a.className = "toc-link";
+    a.textContent = label;
+    a.dataset.target = id;
+    toc.appendChild(a);
+  });
+}
+
+function setLevel(level) {
+  document.querySelectorAll(".level-tab").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.level === level);
+  });
+  document.querySelectorAll(".level-section").forEach(sec => {
+    sec.style.display = sec.dataset.level === level ? "" : "none";
+  });
+  document.getElementById("hero-title").textContent = LEVEL_LABELS[level].title;
+  document.getElementById("hero-desc").textContent = LEVEL_LABELS[level].desc;
+  renderToc(level);
+}
+
+document.querySelectorAll(".level-tab").forEach(btn => {
+  btn.addEventListener("click", () => setLevel(btn.dataset.level));
+});
+
+setLevel("super-beginner");
+
+/* ---------- HTML/CSS relation ---------- */
+const METHOD_CODE = {
+  inline: `&lt;p style="color: #0066cc;"&gt;
+  この文字に色が付いています
+&lt;/p&gt;`,
+  "style-tag": `&lt;style&gt;
+  p { color: #0066cc; }
+&lt;/style&gt;
+
+&lt;p&gt;この文字に色が付いています&lt;/p&gt;`,
+  external: `&lt;link rel="stylesheet" href="style.css"&gt;
+
+/* style.css */
+p { color: #0066cc; }`
+};
+document.querySelectorAll(".method-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".method-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    document.getElementById("methodCode").innerHTML = METHOD_CODE[btn.dataset.method];
+  });
+});
+
+/* ---------- Selector basics ---------- */
+const SEL_CODE = {
+  p: "p {\n  color: #0066cc;\n}",
+  class: ".note {\n  color: #0066cc;\n}",
+  id: "#special {\n  color: #0066cc;\n}"
+};
+function setSelector(kind) {
+  const p1 = document.getElementById("selP1");
+  const p2 = document.getElementById("selP2");
+  const p3 = document.getElementById("selP3");
+  p1.classList.toggle("match", kind === "p");
+  p2.classList.toggle("match", kind === "p" || kind === "class");
+  p3.classList.toggle("match", kind === "p" || kind === "id");
+  document.getElementById("selCode").textContent = SEL_CODE[kind];
+}
+document.querySelectorAll(".sel-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".sel-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    setSelector(btn.dataset.sel);
+  });
+});
+setSelector("p");
+
+/* ---------- Box model ---------- */
+const bmPadding = document.getElementById("bmPadding");
+const bmBorder = document.getElementById("bmBorder");
+const bmMargin = document.getElementById("bmMargin");
+function updateBoxModel() {
+  document.getElementById("bmPaddingOut").textContent = bmPadding.value + "px";
+  document.getElementById("bmBorderOut").textContent = bmBorder.value + "px";
+  document.getElementById("bmMarginOut").textContent = bmMargin.value + "px";
+  document.getElementById("bmPaddingBox").style.padding = bmPadding.value + "px";
+  document.getElementById("bmBorderBox").style.borderWidth = bmBorder.value + "px";
+  document.getElementById("bmMarginBox").style.padding = bmMargin.value + "px";
+  document.getElementById("bmPaddingCode").textContent = bmPadding.value + "px";
+  document.getElementById("bmBorderCode").textContent = bmBorder.value + "px";
+  document.getElementById("bmMarginCode").textContent = bmMargin.value + "px";
+}
+[bmPadding, bmBorder, bmMargin].forEach(el => el.addEventListener("input", updateBoxModel));
+updateBoxModel();
+
+/* ---------- Color values ---------- */
+document.querySelectorAll(".color-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    document.getElementById("colorSwatch").style.background = btn.dataset.colorCode;
+    document.getElementById("colorCode").textContent = btn.dataset.colorCode;
+  });
+});
+
+/* ---------- Font basics ---------- */
+const fontSizeSlider = document.getElementById("fontSizeSlider");
+const fontDemoText = document.getElementById("fontDemoText");
+function updateFontSize() {
+  const px = fontSizeSlider.value + "px";
+  document.getElementById("fontSizeOut").textContent = px;
+  fontDemoText.style.fontSize = px;
+  document.getElementById("fontSizeCode").textContent = px;
+}
+fontSizeSlider.addEventListener("input", updateFontSize);
+updateFontSize();
+
+document.querySelectorAll(".fw-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".fw-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    fontDemoText.style.fontWeight = btn.dataset.fw;
+    document.getElementById("fontWeightCode").textContent = btn.dataset.fw;
+  });
+});
+
+document.querySelectorAll(".ta-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".ta-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    fontDemoText.style.textAlign = btn.dataset.ta;
+    document.getElementById("textAlignCode").textContent = btn.dataset.ta;
+  });
+});
+
+/* ---------- display basics ---------- */
+function updateDisplayMeasured() {
+  const w = Math.round(document.getElementById("dChip1").getBoundingClientRect().width);
+  document.getElementById("dChipMeasured").textContent = w + "px";
+}
+document.querySelectorAll(".display-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".display-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    const mode = btn.dataset.display;
+    ["dChip1", "dChip2", "dChip3"].forEach(id => {
+      const chip = document.getElementById(id);
+      chip.style.display = mode;
+      if (mode === "inline") {
+        chip.style.width = "";
+        chip.style.height = "";
+      } else {
+        chip.style.width = "180px";
+        chip.style.height = "56px";
+      }
+    });
+    document.getElementById("displayCode").textContent = mode;
+    updateDisplayMeasured();
+  });
+});
+updateDisplayMeasured();
+
+/* ---------- Flexbox ---------- */
+const flexRow = document.getElementById("flexRow");
+document.querySelectorAll(".jc-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".jc-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    flexRow.className = "flex-row jc-" + btn.dataset.jc + " " + [...flexRow.classList].find(c => c.startsWith("ai-"));
+    document.getElementById("flexJcVal").textContent = btn.dataset.jc;
+  });
+});
+document.querySelectorAll(".ai-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".ai-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    flexRow.className = "flex-row " + [...flexRow.classList].find(c => c.startsWith("jc-")) + " ai-" + btn.dataset.ai;
+    document.getElementById("flexAiVal").textContent = btn.dataset.ai;
+  });
+});
+
+/* ---------- Grid ---------- */
+const gridSlider = document.getElementById("gridSlider");
+const gridDemo = document.getElementById("gridDemo");
+function updateGrid() {
+  const n = gridSlider.value;
+  document.getElementById("gridSliderOut").textContent = n;
+  gridDemo.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+  gridDemo.innerHTML = "";
+  for (let i = 0; i < Math.max(n, 6); i++) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    gridDemo.appendChild(cell);
+  }
+  document.getElementById("gridCode").textContent = `repeat(${n}, 1fr)`;
+}
+gridSlider.addEventListener("input", updateGrid);
+updateGrid();
+
+/* ---------- CSS Variables ---------- */
+document.querySelectorAll(".theme-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    document.getElementById("themeCard").style.setProperty("--accent", btn.dataset.color);
+    document.getElementById("varCode").textContent = btn.dataset.color;
+  });
+});
+
+/* ---------- clamp() fluid padding ---------- */
+const clampSlider = document.getElementById("clampSlider");
+const clampBox = document.getElementById("clampBox");
+function updateClamp() {
+  const vw = Number(clampSlider.value);
+  document.getElementById("clampSliderOut").textContent = vw + "px";
+  const min = 16, max = 64;
+  const preferred = vw * 0.05;
+  const px = Math.min(Math.max(preferred, min), max);
+  clampBox.style.padding = px.toFixed(1) + "px";
+  document.getElementById("clampCode").textContent = px.toFixed(1) + "px";
+}
+clampSlider.addEventListener("input", updateClamp);
+updateClamp();
+
+/* ---------- :is() / :where() ---------- */
+function setIsSelector(active) {
+  document.querySelectorAll(".is-demo-card").forEach(card => {
+    const isTarget = card.classList.contains("a") || card.classList.contains("b");
+    card.classList.toggle("match", active && isTarget);
+  });
+  document.getElementById("isBtn").classList.toggle("selected", active);
+  document.getElementById("isOffBtn").classList.toggle("selected", !active);
+}
+document.getElementById("isBtn").addEventListener("click", () => setIsSelector(true));
+document.getElementById("isOffBtn").addEventListener("click", () => setIsSelector(false));
+setIsSelector(false);
+
+/* ---------- Container Queries ---------- */
+const cqWrapper = document.getElementById("cqWrapper");
+document.querySelectorAll("[data-w]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-w]").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    cqWrapper.style.width = btn.dataset.w + "px";
+    document.getElementById("cqCode").textContent = btn.dataset.w + "px";
+  });
+});
+
+/* ---------- Nesting toggle (display only) ---------- */
+const NEST_ON = `.card {
+  border: 3px solid #0066cc;
+  & button {
+    background: #0066cc;
+  }
+  &:hover {
+    border-color: #0071e3;
+  }
+}`;
+const NEST_OFF = `.card {
+  border: 3px solid #0066cc;
+}
+.card button {
+  background: #0066cc;
+}
+.card:hover {
+  border-color: #0071e3;
+}`;
+document.querySelectorAll("[data-nest]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-nest]").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    document.getElementById("nestCode").textContent = btn.dataset.nest === "on" ? NEST_ON : NEST_OFF;
+  });
+});
+
+/* ---------- color-mix() ---------- */
+const mixSlider = document.getElementById("mixSlider");
+function updateMix() {
+  const p = mixSlider.value;
+  document.getElementById("mixSliderOut").textContent = p + "%";
+  document.getElementById("mixSwatch").style.background = `color-mix(in srgb, #0066cc ${p}%, #ffffff)`;
+  document.getElementById("mixCode").textContent = p + "%";
+}
+mixSlider.addEventListener("input", updateMix);
+updateMix();
+
+/* ---------- keyframes / transform ---------- */
+const floatSwitch = document.getElementById("floatSwitch");
+const floatCard = document.getElementById("floatCard");
+floatSwitch.addEventListener("change", () => {
+  floatCard.classList.toggle("moved", floatSwitch.checked);
+  document.getElementById("floatCode").textContent = floatSwitch.checked ? "translate(140px, 80px)" : "translate(0, 0)";
+});
+
+/* ---------- aspect-ratio ---------- */
+document.querySelectorAll(".ratio-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".ratio-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    document.getElementById("ratioBox").style.aspectRatio = btn.dataset.ratio;
+    document.getElementById("ratioCode").textContent = btn.dataset.ratio;
+  });
+});
+
+/* ---------- View Transitions ---------- */
+let vtState = false;
+document.getElementById("vtBtn").addEventListener("click", () => {
+  const box = document.getElementById("vtBox");
+  const render = () => {
+    vtState = !vtState;
+    box.textContent = vtState ? "状態 B" : "状態 A";
+  };
+  if (document.startViewTransition) {
+    document.startViewTransition(render);
+  } else {
+    render();
+  }
+});
+
+/* ---------- @layer ---------- */
+const layerDemo = document.getElementById("layerDemo");
+document.getElementById("layerToggle").addEventListener("click", () => {
+  const on = layerDemo.classList.toggle("on");
+  document.getElementById("layerCode").textContent = on ? "true" : "false";
+});
+
+/* ---------- Subgrid ---------- */
+document.querySelectorAll("[data-subgrid]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-subgrid]").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    const on = btn.dataset.subgrid === "on";
+    document.querySelectorAll("#subgridOuter .subgrid-row").forEach(row => {
+      row.classList.toggle("no-subgrid", !on);
+    });
+    document.getElementById("subgridCode").textContent = on ? "subgrid" : "max-content 1fr";
+  });
+});
+
+/* ---------- Anchor Positioning (hover) ---------- */
+const anchorBtn = document.getElementById("anchorBtn");
+const anchorTooltip = document.getElementById("anchorTooltip");
+anchorBtn.addEventListener("mouseenter", () => anchorTooltip.classList.add("show"));
+anchorBtn.addEventListener("mouseleave", () => anchorTooltip.classList.remove("show"));
+
+/* ---------- @property ---------- */
+const angleSlider = document.getElementById("angleSlider");
+function updateAngle() {
+  const deg = angleSlider.value;
+  document.getElementById("angleSliderOut").textContent = deg + "deg";
+  document.getElementById("propertyBox").style.setProperty("--angle", deg + "deg");
+  document.getElementById("angleCode").textContent = deg + "deg";
+}
+angleSlider.addEventListener("input", updateAngle);
+updateAngle();
+
+/* ---------- Scroll spy for sidebar ---------- */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll(".toc-link").forEach(link => {
+        link.classList.toggle("active", link.dataset.target === entry.target.id);
+      });
+    }
+  });
+}, { rootMargin: "-30% 0px -60% 0px" });
+
+function observeFeatures() {
+  document.querySelectorAll(".feature").forEach(f => observer.observe(f));
+}
+observeFeatures();
+</script>
+</body>
+</html>
