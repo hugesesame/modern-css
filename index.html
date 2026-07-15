@@ -37,6 +37,8 @@
   --font-display:-apple-system, "SF Pro Display", "Inter", sans-serif;
   --font-body:-apple-system, "SF Pro Text", "Inter", sans-serif;
   --font-mono:"SF Mono", "Menlo", "Consolas", monospace;
+  --display-chip-w:96px;
+  --display-chip-h:40px;
 }
 
 *{box-sizing:border-box;}
@@ -668,16 +670,16 @@ footer{
               <button class="btn btn-utility display-btn selected" data-display="inline-block">inline-block</button>
             </div>
             <div class="demo-box" style="display:block;text-align:left;">
-              <div class="display-chip" id="dChip1" style="display:inline-block;width:180px;height:56px;">Chip 1</div>
-              <div class="display-chip" id="dChip2" style="display:inline-block;width:180px;height:56px;">Chip 2</div>
-              <div class="display-chip" id="dChip3" style="display:inline-block;width:180px;height:56px;">Chip 3</div>
+              <div class="display-chip" id="dChip1" style="display:inline-block;width:var(--display-chip-w);height:var(--display-chip-h);">Chip 1</div>
+              <div class="display-chip" id="dChip2" style="display:inline-block;width:var(--display-chip-w);height:var(--display-chip-h);">Chip 2</div>
+              <div class="display-chip" id="dChip3" style="display:inline-block;width:var(--display-chip-w);height:var(--display-chip-h);">Chip 3</div>
             </div>
             <p style="margin:0;font-size:13px;color:var(--color-ink-muted-80);">Chip 1 の実際の描画幅: <span id="dChipMeasured" style="font-family:var(--font-mono);color:var(--color-ink);"></span></p>
           </div>
           <pre class="code-panel"><code>.chip {
   display: <span class="hl" id="displayCode">inline-block</span>;
-  width: <span class="hl" id="displayWidthCode">180px</span>; /* 指定サイズ */
-  height: 56px;
+  width: <span class="hl" id="displayWidthCode">180px</span>; /* 指定サイズ（画面幅で可変） */
+  height: <span class="hl" id="displayHeightCode">56px</span>;
 }
 /* inline のときは width/height が無視される */</code></pre>
         </div>
@@ -1358,6 +1360,9 @@ document.querySelectorAll(".ta-btn").forEach(btn => {
 function updateDisplayMeasured() {
   const w = Math.round(document.getElementById("dChip1").getBoundingClientRect().width);
   document.getElementById("dChipMeasured").textContent = w + "px";
+  const rootStyle = getComputedStyle(document.documentElement);
+  document.getElementById("displayWidthCode").textContent = rootStyle.getPropertyValue("--display-chip-w").trim();
+  document.getElementById("displayHeightCode").textContent = rootStyle.getPropertyValue("--display-chip-h").trim();
 }
 document.querySelectorAll(".display-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -1371,8 +1376,8 @@ document.querySelectorAll(".display-btn").forEach(btn => {
         chip.style.width = "";
         chip.style.height = "";
       } else {
-        chip.style.width = "180px";
-        chip.style.height = "56px";
+        chip.style.width = "var(--display-chip-w)";
+        chip.style.height = "var(--display-chip-h)";
       }
     });
     document.getElementById("displayCode").textContent = mode;
