@@ -6,6 +6,8 @@
 
 ビルド不要・外部ライブラリ不要の単一HTMLファイルで完結しているので、`index.html` をブラウザで開くだけで使えます。
 
+![Modern CSS Playground のスクリーンショット](screenshots/screenshot.png)
+
 ## 使い方
 
 ```
